@@ -1,13 +1,14 @@
-import { DataTypes, Model } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../database';
 
 export class Item extends Model {
   public id!: number;
   public name!: string;
-  public description!: string;
+  public description?: string;
   public price!: number;
-  public createdAt!: Date;
-  public updatedAt!: Date;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Item.init(
@@ -18,32 +19,31 @@ Item.init(
       primaryKey: true,
     },
     name: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
-    },
-    price: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        min: 0,  // Ensure price is positive
+        notEmpty: { msg: 'Name is required' },
+        len: { args: [1, 100], msg: 'Name must be between 1 and 100 characters' },
       },
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+    description: {
+      type: DataTypes.STRING,
+      validate: {
+        len: { args: [0, 500], msg: 'Description must not exceed 500 characters' },
+      },
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        isFloat: { msg: 'Price must be a valid number' },
+        min: { args: [0.01], msg: 'Price must be greater than 0' },
+      },
     },
   },
   {
     sequelize,
+    modelName: 'Item',
     tableName: 'items',
-    timestamps: true,  // Automatically handle `createdAt` and `updatedAt`
   }
 );

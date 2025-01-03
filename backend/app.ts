@@ -15,13 +15,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/', itemRoute);
+app.use('/api/items', itemRoute);
 
-// Error handling middleware
+// Global error handler in app.ts
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).json({ message: 'Something went wrong', error: err.message });
 });
+
 
 // Sync database and start server
 sequelize.sync().then(() => {

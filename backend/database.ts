@@ -3,12 +3,12 @@ import { Sequelize } from 'sequelize-typescript';
 
 const sequelize = new Sequelize({
   dialect: 'mysql',
-  host: 'localhost', // or your MySQL host
-  port: 3306, // MySQL port
+  host: 'localhost', 
+  port: 3306, 
   username: 'root',
   password: '',
   database: 'items_db',
-  models: [__dirname + '/../models'], // Auto-load models from the models directory
+  models: [__dirname + '/../models'],
 });
 
 export default sequelize;
