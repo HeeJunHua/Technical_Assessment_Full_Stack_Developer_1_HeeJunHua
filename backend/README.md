@@ -141,3 +141,41 @@
       Your backend should now be accessible at <code>http://localhost:3000</code>.
     </li>
   </ol>
+
+  <h2>Database Setup</h2>
+<p>The backend uses MySQL as the database. You can use XAMPP to set up MySQL on your local machine, or use any MySQL server of your choice.</p>
+
+<h3>Steps to Set Up MySQL Using XAMPP:</h3>
+<ol>
+  <li>Download and install <a href="https://www.apachefriends.org/index.html" target="_blank">XAMPP</a> if you haven't already.</li>
+  <li>Launch the XAMPP Control Panel and start the Apache and MySQL services.</li>
+  <li>Open phpMyAdmin by navigating to <a href="http://localhost/phpmyadmin" target="_blank">http://localhost/phpmyadmin</a> in your browser.</li>
+  <li>In phpMyAdmin, click on the "Databases" tab and create a new database with the name <code>items_db</code>.</li>
+  <li>Once the database is created, you can run the following SQL code to create the <code>items</code> table:</li>
+</ol>
+
+<h3>SQL Code to Create the Database and Table:</h3>
+<pre>
+-- Create the database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS items_db;
+
+-- Use the created database
+USE items_db;
+
+-- Create the items table
+CREATE TABLE IF NOT EXISTS items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(500),
+  price DECIMAL(10, 2) NOT NULL CHECK (price > 0),
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Optionally, you can add some sample data:
+INSERT INTO items (name, description, price) VALUES
+  ('Item 1', 'This is a description of Item 1', 10.50),
+  ('Item 2', 'This is a description of Item 2', 15.75),
+  ('Item 3', 'This is a description of Item 3', 20.00);
+</pre>
+<p>Once you've created the database and table, the backend will be able to interact with it for the CRUD operations.</p>
