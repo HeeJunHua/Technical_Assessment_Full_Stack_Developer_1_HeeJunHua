@@ -1,7 +1,9 @@
+// app.ts
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import itemRoute from "./routes/item.route";
+import sequelize from './database';
+import itemRoute from './routes/item.route';
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -13,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/item', itemRoute);
+app.use('/', itemRoute);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +23,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Something broke!');
 });
 
-// Start server
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+// Sync database and start server
+sequelize.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  });
+}).catch((err: Error) => {
+  console.error("Unable to sync database:", err);
 });
